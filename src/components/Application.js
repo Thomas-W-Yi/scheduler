@@ -19,6 +19,7 @@ export default function Application(props) {
   const setDay = (day) => setState({ ...state, day });
 
   useEffect(() => {
+    console.log(`re-rendered`);
     Promise.all([
       axios.get('/api/days'),
       axios.get('/api/appointments'),
@@ -35,6 +36,7 @@ export default function Application(props) {
   const dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const dailyInterviewers = getInterviewersForDay(state, state.day);
+
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -57,6 +59,17 @@ export default function Application(props) {
       });
   }
 
+  function cancelInterview(id) {
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then((res) => {
+        console.log(`this is from then`);
+      })
+      .catch((err) => {
+        console.log(`this is from catch`);
+      });
+  }
+
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
     return (
@@ -67,6 +80,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={dailyInterviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
