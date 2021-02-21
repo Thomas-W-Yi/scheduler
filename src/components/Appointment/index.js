@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'components/Appointment/styles.scss';
 import Header from 'components/Appointment/Header';
 import Show from 'components/Appointment/Show';
@@ -23,38 +23,28 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+  useEffect(() => {
+    transition(props.interview ? SHOW : EMPTY);
+  }, [props.interview]);
 
   function save(name, interviewer) {
-    console.log(name, interviewer);
     const interview = {
       student: name,
       interviewer,
     };
     transition('SAVING');
-    props
-      .bookInterview(props.id, interview)
-      .then((res) => {
-        transition('SHOW');
-      })
-      .catch((err) => {
-        console.log(`inside save catch`, err);
-        transition('ERROR_SAVE', true);
-      });
+    props.bookInterview(props.id, interview).catch((err) => {
+      transition('ERROR_SAVE', true);
+    });
   }
   function onDelete() {
     transition('CONFIRM');
   }
   function onConfirm() {
     transition('DELETING', true);
-    props
-      .cancelInterview(props.id)
-      .then((res) => {
-        transition('EMPTY');
-      })
-      .catch((err) => {
-        console.log(`inside onCOnfirm catch`);
-        transition('ERROR_DELETE', true);
-      });
+    props.cancelInterview(props.id).catch((err) => {
+      transition('ERROR_DELETE', true);
+    });
   }
 
   function onEdit() {
@@ -65,7 +55,7 @@ export default function Appointment(props) {
     <article className='appointment'>
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition('CREATE')} />}
-      {mode === SHOW && (
+      {mode === SHOW && props.interview && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
