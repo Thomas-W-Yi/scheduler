@@ -13,10 +13,10 @@ export default function useApplicationData() {
       day.appointments.includes(id) && (num = index);
       return day.appointments.includes(id);
     })[0];
-    condition ? dayObj.spots-- : dayObj.spots++;
+    const dayNew = { ...dayObj };
+    condition ? dayNew.spots-- : dayNew.spots++;
     const days = [...state.days];
-    days[num] = dayObj;
-
+    days[num] = dayNew;
     return days;
   }
 
@@ -34,7 +34,7 @@ export default function useApplicationData() {
           ...state.appointments[action.value.id],
           interview: { ...action.value.interview },
         };
-        console.log(action.value.id, state);
+
         const days = getDays(action.value.id, true, state);
         return {
           ...state,
@@ -46,7 +46,6 @@ export default function useApplicationData() {
         };
       }
       case DELETE_INTERVIEW: {
-        console.log(action.value.id, state);
         const days = getDays(action.value, false, state);
         return {
           ...state,
@@ -96,16 +95,13 @@ export default function useApplicationData() {
     const ws = new WebSocket('ws://localhost:8001');
     ws.onopen = () => {
       ws.send('ping');
-      console.log('connected');
     };
 
     ws.onmessage = function (event) {
       const message = JSON.parse(event.data);
-      console.log(message, state);
       if (!message.interview && message.type === SET_INTERVIEW) {
         dispatch({ type: DELETE_INTERVIEW, value: message.id });
-      }
-      if (message.interview && message.type === SET_INTERVIEW) {
+      } else if (message.interview && message.type === SET_INTERVIEW) {
         dispatch({
           type: SET_INTERVIEW,
           value: { interview: message.interview, id: message.id },
