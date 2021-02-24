@@ -78,9 +78,9 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
-  const setDay = (day) => {
-    dispatch({ type: SET_DAY, value: day });
-  };
+  // const setDay = (day) => {
+  //   dispatch({ type: SET_DAY, value: day });
+  // };
 
   useEffect(() => {
     Promise.all([
