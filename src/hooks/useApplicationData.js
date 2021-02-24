@@ -8,13 +8,19 @@ export default function useApplicationData() {
   const DELETE_INTERVIEW = 'DELETE_INTERVIEW';
 
   function getDays(id, condition, state) {
-    let num;
+    let num,
+      interviewStatus = state.appointments[id].interview;
     const dayObj = state.days.filter((day, index) => {
       day.appointments.includes(id) && (num = index);
       return day.appointments.includes(id);
     })[0];
     const dayNew = { ...dayObj };
-    condition ? dayNew.spots-- : dayNew.spots++;
+    if (condition && !interviewStatus) {
+      dayNew.spots--;
+    } else if (condition && interviewStatus) {
+    } else if (!condition) {
+      dayNew.spots++;
+    }
     const days = [...state.days];
     days[num] = dayNew;
     return days;

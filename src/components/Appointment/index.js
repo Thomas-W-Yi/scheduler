@@ -33,9 +33,11 @@ export default function Appointment(props) {
       interviewer,
     };
     transition('SAVING');
-    props.bookInterview(props.id, interview).catch((err) => {
-      transition('ERROR_SAVE', true);
-    });
+    const book = props.bookInterview(props.id, interview);
+    book &&
+      book.catch((err) => {
+        transition('ERROR_SAVE', true);
+      });
   }
   function onDelete() {
     transition('CONFIRM');
@@ -52,7 +54,7 @@ export default function Appointment(props) {
   }
 
   return (
-    <article className='appointment'>
+    <article className='appointment' data-testid='appointment'>
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition('CREATE')} />}
       {mode === SHOW && props.interview && (

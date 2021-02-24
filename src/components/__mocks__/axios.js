@@ -94,25 +94,21 @@ export default {
   put: jest.fn((url, data) => {
     const interview = data.interview;
     const id = interview.interviewer;
-    if (url === '/api/appointments/1') {
-      mockServer.clients().forEach(function eachClient(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          setTimeout(
-            () =>
-              socket.send(
-                JSON.stringify({
-                  type: 'SET_INTERVIEW',
-                  id,
-                  interview,
-                })
-              ),
-            1000
-          );
-        }
-      });
-      /* Resolve appointments data */
-      return Promise.resolve({ status: 204, statusText: 'No Content' });
+    if (url === `/api/appointments/${id}`) {
+      setTimeout(
+        () =>
+          socket.send(
+            JSON.stringify({
+              type: 'SET_INTERVIEW',
+              id,
+              interview,
+            })
+          ),
+        1000
+      );
     }
+    /* Resolve appointments data */
+    return Promise.resolve({ status: 204, statusText: 'No Content' });
   }),
 
   delete: jest.fn((url, data) => {
