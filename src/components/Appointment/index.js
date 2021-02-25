@@ -25,7 +25,7 @@ export default function Appointment(props) {
   );
   useEffect(() => {
     transition(props.interview ? SHOW : EMPTY);
-  }, [props.interview]);
+  }, [props.interview, transition]);
 
   function save(name, interviewer) {
     const interview = {
