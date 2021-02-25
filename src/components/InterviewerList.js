@@ -12,6 +12,7 @@ function InterviewerList(props) {
           props.interviewers.map((interviewer) => {
             return (
               <InterviewerListItem
+                key={interviewer.id}
                 name={interviewer && interviewer.name}
                 avatar={interviewer && interviewer.avatar}
                 setInterviewer={() => props.setInterviewer(interviewer)}
