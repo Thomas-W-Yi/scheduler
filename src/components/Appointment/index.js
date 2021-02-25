@@ -24,8 +24,13 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
   useEffect(() => {
-    transition(props.interview ? SHOW : EMPTY);
-  }, [props.interview]);
+    if (mode === EMPTY && props.interview) {
+      transition(SHOW);
+    }
+    if (mode === SHOW && props.interview === null) {
+      transition(EMPTY);
+    }
+  }, [props.interview, transition, mode]);
 
   function save(name, interviewer) {
     const interview = {
@@ -33,20 +38,32 @@ export default function Appointment(props) {
       interviewer,
     };
     transition('SAVING');
-    const book = props.bookInterview(props.id, interview);
-    book &&
-      book.catch((err) => {
+    props
+      .bookInterview(props.id, interview)
+      .then(() => {
+        transition('SHOW');
+      })
+      .catch((err) => {
         transition('ERROR_SAVE', true);
       });
+    // book &&
+    //   book.catch((err) => {
+    //     transition('ERROR_SAVE', true);
+    //   });
   }
   function onDelete() {
     transition('CONFIRM');
   }
   function onConfirm() {
     transition('DELETING', true);
-    props.cancelInterview(props.id).catch((err) => {
-      transition('ERROR_DELETE', true);
-    });
+    props
+      .cancelInterview(props.id)
+      .then(() => {
+        transition(EMPTY);
+      })
+      .catch((err) => {
+        transition('ERROR_DELETE', true);
+      });
   }
 
   function onEdit() {
