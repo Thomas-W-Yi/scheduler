@@ -38,7 +38,6 @@ npm run storybook
 !["hover over days"](public/images/2.png)
 !["add intervew"](public/images/3.png)
 !["saving"](public/images/4.png)
-!["saving"](public/images/4.png)
 !["show"](public/images/show.png)
 !["delete"](public/images/5.png)
 !["deleting"](public/images/6.png)
